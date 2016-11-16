@@ -1,0 +1,10 @@
+module.exports = {
+    // TOKEN OF DISCORD APPLICATION
+    TOKEN: '',
+    // CHANNEL FOR WELCOME MESSAGES
+    DEFAULT_CH: '',
+    // CHANNEL FOR DEBUG/INFO MESSAGES
+    BOT_CH: '',
+    // SEND MORE DEBUG MESSAGES
+    DEBUG: false
+};

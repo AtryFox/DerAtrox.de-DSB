@@ -1,0 +1,14 @@
+{
+  "name": "DerAtrox.de-DSB",
+  "author": "Benjamin Leuckefeld",
+  "version": "1.0.0",
+  "description": "Discord server bot for DerAtrox.de",
+  "dependencies": {
+    "discord.js": "^10.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DerAtrox/DerAtrox.de-DSB.git"
+  },
+  "private": true
+}
