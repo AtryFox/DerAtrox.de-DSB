@@ -6,6 +6,7 @@ var Discord = require('discord.js'),
     version,
     exec;
 
+/* VERSION */
 function getVersion(callback) {
     exec = exec || require('child_process').exec;
 
@@ -19,6 +20,7 @@ function getVersion(callback) {
     });
 }
 
+/* BOT EVENTS */
 bot.on('ready', function () {
     online();
     console.log('I am ready!');
@@ -64,6 +66,7 @@ bot.on('message', function (message) {
 
 });
 
+/* PERMISSIONS */
 function Permission(checker) {
     return {
         check: function (user) {
@@ -96,6 +99,7 @@ function respond(message, response) {
     message.channel.sendMessage(message.author + " " + response);
 }
 
+/* COMMAND PROCESSING */
 function processCommand(message, command, args) {
     switch (command) {
         case 'help':
@@ -185,6 +189,7 @@ var commands = [
     }
 ];
 
+/* GENERAL APPLICATION STUFF */
 process.on('exit', idle);
 
 process.on('SIGINT', function(){
@@ -201,5 +206,6 @@ function online() {
     bot.user.setStatus('online');
 }
 
+/* LOGIN */
 bot.login(token);
 
