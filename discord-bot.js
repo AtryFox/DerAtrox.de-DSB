@@ -47,7 +47,7 @@ bot.on('guildMemberAdd', function (member) {
     bot.channels.find('id', config.DEFAULT_CH).sendMessage('Herzlich Willkommen, ' + member);
 });
 
-bot.on('message', function (message) {
+function onMessage(message) {
     if (message.author.id == bot.user.id) {
         return;
     }
@@ -75,7 +75,15 @@ bot.on('message', function (message) {
             return message.channel.sendMessage('You have to be member ' + server.name + '!');
         }
     }
+}
 
+bot.on('message', onMessage);
+
+bot.on('messageUpdate', function (oldMessage, newMessage) {
+    if (typeof newMessage.author === 'undefined')
+        return;
+
+   onMessage(newMessage);
 });
 
 /* PERMISSIONS */
@@ -86,9 +94,7 @@ function Permission(checker) {
                 return false;
             }
 
-            if (typeof user !== 'GuildMember') {
-                var member = server.members.find('id', user.id)
-            }
+            var member = server.members.find('id', user.id);
 
             return checker(member);
         }
@@ -115,7 +121,7 @@ function respond(message, response, pm) {
     if (pm) {
         message.author.sendMessage(response);
     } else {
-        message.reply(message.author + " " + response);
+        message.reply(response);
     }
 }
 
