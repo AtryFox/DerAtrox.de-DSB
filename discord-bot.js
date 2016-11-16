@@ -40,19 +40,11 @@ bot.on('ready', function () {
 });
 
 bot.on('guildMemberAdd', function (member) {
-    if(member.guild.id != config.SERVER_ID) {
-        return;
-    }
-
     bot.channels.find('id', config.DEFAULT_CH).sendMessage('Herzlich Willkommen, ' + member);
 });
 
 function onMessage(message) {
     if (message.author.id == bot.user.id) {
-        return;
-    }
-
-    if(message.guild.id != config.SERVER_ID) {
         return;
     }
 
