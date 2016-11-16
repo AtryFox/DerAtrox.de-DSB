@@ -40,11 +40,19 @@ bot.on('ready', function () {
 });
 
 bot.on('guildMemberAdd', function (member) {
+    if(member.guild.id != config.SERVER_ID) {
+        return;
+    }
+
     bot.channels.find('id', config.DEFAULT_CH).sendMessage('Herzlich Willkommen, ' + member);
 });
 
 bot.on('message', function (message) {
     if (message.author.id == bot.user.id) {
+        return;
+    }
+
+    if(message.guild.id != config.SERVER_ID) {
         return;
     }
 
@@ -107,7 +115,7 @@ function respond(message, response, pm) {
     if (pm) {
         message.author.sendMessage(response);
     } else {
-        message.channel.sendMessage(message.author + " " + response);
+        message.reply(message.author + " " + response);
     }
 }
 
