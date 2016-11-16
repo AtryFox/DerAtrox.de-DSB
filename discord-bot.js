@@ -39,6 +39,10 @@ bot.on('ready', function () {
     server = bot.guilds.find('id', config.SERVER_ID);
 });
 
+bot.on('guildMemberAdd', function(member) {
+    bot.channels.find('id', config.DEFAULT_CH).sendMessage('Herzlich Willkommen, ' + member);
+});
+
 bot.on('message', function (message) {
     if (message.author.id == bot.user.id) {
         return;
