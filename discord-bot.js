@@ -31,7 +31,7 @@ bot.on('ready', function () {
         if (config.DEBUG) bot.channels.find('id', config.BOT_CH).sendMessage('I am ready, running version ' + version + '!');
     });
 
-    if(!bot.guilds.exists('id', config.SERVER_ID)) {
+    if (!bot.guilds.exists('id', config.SERVER_ID)) {
         console.log('Bot is not connected to the selected server!');
         process.exit();
     }
@@ -39,7 +39,7 @@ bot.on('ready', function () {
     server = bot.guilds.find('id', config.SERVER_ID);
 });
 
-bot.on('guildMemberAdd', function(member) {
+bot.on('guildMemberAdd', function (member) {
     bot.channels.find('id', config.DEFAULT_CH).sendMessage('Herzlich Willkommen, ' + member);
 });
 
@@ -99,8 +99,16 @@ var isUser = new Permission(function (member) {
     return isMod.check(member) ? true : member.roles.exists('name', 'Stammnutzer');
 });
 
-function respond(message, response) {
-    message.channel.sendMessage(message.author + " " + response);
+function respond(message, response, pm) {
+    if (typeof pm === 'undefined') {
+        pm = false;
+    }
+
+    if (pm) {
+        message.author.sendMessage(response);
+    } else {
+        message.channel.sendMessage(message.author + " " + response);
+    }
 }
 
 /* COMMAND PROCESSING */
@@ -112,7 +120,7 @@ function processCommand(message, command, args) {
 
                 commands.forEach(function (command) {
                     text += '**/' + command.name + '**';
-                    if('aliases' in command) {
+                    if ('aliases' in command) {
                         text += '(alternativ: ';
                         text += command.aliases.join(', ');
                         text += ')';
@@ -120,7 +128,7 @@ function processCommand(message, command, args) {
                     text += '\n' + command.help + '\n\n';
                 });
 
-                respond(message, text);
+                respond(message, text, true);
             })();
             break;
         case 'ver':
@@ -196,7 +204,7 @@ var commands = [
 /* GENERAL APPLICATION STUFF */
 process.on('exit', idle);
 
-process.on('SIGINT', function(){
+process.on('SIGINT', function () {
     idle();
     process.exit();
 
