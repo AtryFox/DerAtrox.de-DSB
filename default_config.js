@@ -1,6 +1,8 @@
 module.exports = {
     // TOKEN OF DISCORD APPLICATION
     TOKEN: '',
+    // SERVER ID
+    SERVER_ID: '',
     // CHANNEL FOR WELCOME MESSAGES
     DEFAULT_CH: '',
     // CHANNEL FOR DEBUG/INFO MESSAGES

@@ -20,6 +20,7 @@ function getVersion(callback) {
 }
 
 bot.on('ready', function () {
+    online();
     console.log('I am ready!');
     getVersion(function (v) {
         version = v;
@@ -28,7 +29,12 @@ bot.on('ready', function () {
         if (config.DEBUG) bot.channels.find('id', config.BOT_CH).sendMessage('I am ready, running version ' + version + '!');
     });
 
-    server = bot.guilds.first();
+    if(!bot.guilds.exists('id', config.SERVER_ID)) {
+        console.log('Bot is not connected to the selected server!');
+        process.exit();
+    }
+
+    server = bot.guilds.find('id', config.SERVER_ID);
 });
 
 bot.on('message', function (message) {
@@ -178,6 +184,22 @@ var commands = [
         aliases: ['who', 'about']
     }
 ];
+
+process.on('exit', idle);
+
+process.on('SIGINT', function(){
+    idle();
+    process.exit();
+
+});
+
+function idle() {
+    bot.user.setStatus('idle');
+}
+
+function online() {
+    bot.user.setStatus('online');
+}
 
 bot.login(token);
 
