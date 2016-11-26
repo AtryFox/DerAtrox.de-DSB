@@ -49,7 +49,7 @@ function onMessage(message) {
     }
 
     function handleCommand() {
-        var match = /^\/([a-zA-Z]+).*$/.exec(message.content);
+        var match = /^[\/!]([a-zA-Z]+).*$/.exec(message.content);
 
         if (match) {
             var args = message.content.split(' ').splice(1);
@@ -75,7 +75,7 @@ bot.on('messageUpdate', function (oldMessage, newMessage) {
     if (typeof newMessage.author === 'undefined')
         return;
 
-   onMessage(newMessage);
+    onMessage(newMessage);
 });
 
 /* PERMISSIONS */
@@ -122,19 +122,22 @@ function processCommand(message, command, args) {
     switch (command) {
         case 'help':
             (function () {
-                var text = 'Alle verfügbaren Befehle:\n\n';
+                var text = '\n\nBefehle müssen `/` oder `!` vorangestellt haben. Groß- und Kleinschreibung wird nicht beachtet.\n\n';
 
                 commands.forEach(function (command) {
-                    text += '**/' + command.name + '**';
+                    text += '**`' + command.name + '`**';
                     if ('aliases' in command) {
-                        text += '(alternativ: ';
-                        text += command.aliases.join(', ');
-                        text += ')';
+                        text += ' (alternativ: ';
+                        text += '`' + command.aliases.join('`, `');
+                        text += '`)';
                     }
                     text += '\n' + command.help + '\n\n';
                 });
 
                 respond(message, text, true);
+                if (message.channel.type == 'text') {
+                    message.delete();
+                }
             })();
             break;
         case 'ver':
