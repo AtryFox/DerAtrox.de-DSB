@@ -228,14 +228,14 @@ function processCommand(message, command, args) {
                 }
 
                 if (isNaN(args[0])) {
-                    respond(message, "Limit muss angegeben werden! Beispiel: `/help 10`");
+                    respond(message, "Limit muss angegeben werden! Beispiel: `/help 4`");
                     return;
                 }
 
                 var limit = args[0];
 
-                if (limit > 10 && !isAdmin.check(message.author)) {
-                    respond(message, "Es können maximal 10 Nachrichten entfernt werden.");
+                if (limit > 5 && !isAdmin.check(message.author)) {
+                    respond(message, "Es können maximal 5 Nachrichten entfernt werden.");
                     return;
                 }
 
