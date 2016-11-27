@@ -246,7 +246,7 @@ function processCommand(message, command, args) {
 
                 message.channel.fetchMessages({limit: limit, before: message.id}).then(function (messages) {
                     messages.forEach(function (message) {
-                        if(args[1].toLowerCase() == '-f' && isAdmin.check(message.author)) {
+                        if (args[1].toLowerCase() == '-f' && isAdmin.check(message.author)) {
                             message.delete();
                         } else if (!message.pinned && message.type == 'DEFAULT') {
                             message.delete();
@@ -261,19 +261,6 @@ function processCommand(message, command, args) {
                 }
 
                 message.delete();
-            })();
-            break;
-        case 'restart':
-            (function () {
-                if (!isAdmin.check(message.author)) {
-                    return respond(message, 'Du besitzt nicht genügend Rechte!');
-                }
-
-                respond(message, "Bot wird aktualisiert und neugestartet. Bitte warten...");
-
-                exec = exec || require('child_process').exec;
-
-                exec('sh ./start.sh');
             })();
             break;
     }
