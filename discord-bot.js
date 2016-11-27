@@ -246,7 +246,7 @@ function processCommand(message, command, args) {
 
                 message.channel.fetchMessages({limit: limit, before: message.id}).then(function (messages) {
                     messages.forEach(function (message) {
-                        if (args[1].toLowerCase() == '-f' && isAdmin.check(message.author)) {
+                        if (args.length < 2 ? false : args[1].toLowerCase() == '-f' && isAdmin.check(message.author)) {
                             message.delete();
                         } else if (!message.pinned && message.type == 'DEFAULT') {
                             message.delete();
