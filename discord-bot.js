@@ -224,7 +224,7 @@ function processCommand(message, command, args) {
                 }
 
                 if (message.channel.type != 'text') {
-                    return respond(message, 'Dieser Befehl muss auf dem Server ausgeführt werden.')
+                    return respond(message, 'Dieser Befehl muss auf dem Server ausgeführt werden.', true)
                 }
 
                 if (isNaN(args[0])) {
@@ -245,7 +245,13 @@ function processCommand(message, command, args) {
                 }
 
                 message.channel.fetchMessages({limit: limit, before: message.id}).then(function (messages) {
-                    messages.deleteAll();
+                    messages.forEach(function (message) {
+                        if(args[1].toLowerCase() == '-f' && isAdmin.check(message.author)) {
+                            message.delete();
+                        } else if (!message.pinned && message.type == 'DEFAULT') {
+                            message.delete();
+                        }
+                    });
                 });
 
                 if (limit == 1) {
@@ -277,8 +283,8 @@ var commands = [
         role: 'Moderator'
     },
     {
-        name: 'delete [Anzahl]',
-        help: 'Löscht die letzten Nachrichten in einem Channel.',
+        name: 'delete [Anzahl] [-f]',
+        help: 'Löscht die letzten Nachrichten in einem Channel. Der Parameter -f erzwingt das Löschen.',
         aliases: ['del'],
         role: 'Administrator'
     }
