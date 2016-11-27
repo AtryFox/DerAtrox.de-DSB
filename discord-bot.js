@@ -28,7 +28,7 @@ bot.on('ready', function () {
         version = v;
         bot.user.setGame('version ' + version);
 
-        if (config.DEBUG) bot.channels.find('id', config.BOT_CH).sendMessage('I am ready, running version ' + version + '!');
+        if (config.DEBUG) bot.channels.find('id', config.BOT_CH).sendMessage('I am ready, running version `' + version + '`!');
     });
 
     if (!bot.guilds.exists('id', config.SERVER_ID)) {
@@ -48,8 +48,16 @@ function onMessage(message) {
         return;
     }
 
+    if (message.channel.type == 'group') {
+        return;
+    }
+
     function handleCommand() {
         var match = /^[\/!]([a-zA-Z]+).*$/.exec(message.content);
+
+        if (message.channel.type == 'dm') {
+            match = /^[\/!]?([a-zA-Z]+).*$/.exec(message.content);
+        }
 
         if (match) {
             var args = message.content.split(' ').splice(1);
@@ -105,6 +113,7 @@ var isUser = new Permission(function (member) {
     return isMod.check(member) ? true : member.roles.exists('name', 'Stammnutzer');
 });
 
+
 function respond(message, response, pm) {
     if (typeof pm === 'undefined') {
         pm = false;
@@ -122,16 +131,33 @@ function processCommand(message, command, args) {
     switch (command) {
         case 'help':
             (function () {
-                var text = '\n\nBefehle müssen `/` oder `!` vorangestellt haben. Groß- und Kleinschreibung wird nicht beachtet.\n\n';
+                var text = '\n\nBefehle müssen `/` oder `!` vorangestellt haben. Groß- und Kleinschreibung wird nicht beachtet.\nIn PMs wird kein Präfix benötigt.\n\n';
+
+                text += 'Liste aller Befehle, die **du** nutzen kannst:\n\n';
 
                 commands.forEach(function (command) {
+                    if (command.role == "Administrator") {
+                        if (!isAdmin.check(message.author)) {
+                            return;
+                        }
+                    } else if (command.role == "Moderator") {
+                        if (!isMod.check(message.author)) {
+                            return;
+                        }
+                    } else if (command.role == "Stammnutzer") {
+                        if (!isUser.check(message.author)) {
+                            return;
+                        }
+                    }
+
                     text += '**`' + command.name + '`**';
                     if ('aliases' in command) {
                         text += ' (alternativ: ';
                         text += '`' + command.aliases.join('`, `');
                         text += '`)';
                     }
-                    text += '\n' + command.help + '\n\n';
+
+                    text += '\n```' + command.help + '```\n\n';
                 });
 
                 respond(message, text, true);
@@ -190,6 +216,47 @@ function processCommand(message, command, args) {
                 respond(message, 'Nutzerinformationen:```json\n' + JSON.stringify(data, null, '\t') + '```');
             })();
             break;
+        case 'del':
+        case 'delete':
+            (function () {
+                if (!isMod.check(message.author)) {
+                    return respond(message, 'Du besitzt nicht genügend Rechte!');
+                }
+
+                if (message.channel.type != 'text') {
+                    return respond(message, 'Dieser Befehl muss auf dem Server ausgeführt werden.')
+                }
+
+                if (isNaN(args[0])) {
+                    respond(message, "Limit muss angegeben werden! Beispiel: `/help 10`");
+                    return;
+                }
+
+                var limit = args[0];
+
+                if (limit > 10 && !isAdmin.check(message.author)) {
+                    respond(message, "Es können maximal 10 Nachrichten entfernt werden.");
+                    return;
+                }
+
+                if (limit < 1) {
+                    respond(message, "Es muss mindestens eine Nachricht entfernt werden.");
+                    return;
+                }
+
+                message.channel.fetchMessages({limit: limit, before: message.id}).then(function (messages) {
+                    messages.deleteAll();
+                });
+
+                if (limit == 1) {
+                    respond(message, "Es wurden die letzte Nachricht entfernt.");
+                } else {
+                    respond(message, "Es wurden die letzten " + limit + " Nachrichten entfernt.");
+                }
+
+                message.delete();
+            })();
+            break;
     }
 }
 
@@ -204,9 +271,16 @@ var commands = [
         aliases: ['ver']
     },
     {
-        name: 'whois',
+        name: 'whois [Nutzername]',
         help: 'Zeigt Informationen über sich selber oder einen Benutzer an.',
-        aliases: ['who', 'about']
+        aliases: ['who', 'about'],
+        role: 'Moderator'
+    },
+    {
+        name: 'delete [Anzahl]',
+        help: 'Löscht die letzten Nachrichten in einem Channel.',
+        aliases: ['del'],
+        role: 'Administrator'
     }
 ];
 
