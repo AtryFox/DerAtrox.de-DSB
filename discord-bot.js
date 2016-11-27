@@ -263,6 +263,19 @@ function processCommand(message, command, args) {
                 message.delete();
             })();
             break;
+        case 'restart':
+            (function () {
+                if (!isAdmin.check(message.author)) {
+                    return respond(message, 'Du besitzt nicht genügend Rechte!');
+                }
+
+                respond(message, "Bot wird aktualisiert und neugestartet. Bitte warten...");
+
+                exec = exec || require('child_process').exec;
+
+                exec('sh ./start.sh');
+            })();
+            break;
     }
 }
 
