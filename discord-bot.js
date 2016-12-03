@@ -28,7 +28,7 @@ bot.on('ready', function () {
         version = v;
         bot.user.setGame('version ' + version);
 
-        if (config.DEBUG) bot.channels.find('id', config.BOT_CH).sendMessage('I am ready, running version `' + version + '`!');
+        if (config.DEBUG) bot.channels.find('id', config.BOT_CH).sendMessage('I am ready, running version `' + version + '`! 👌');
     });
 
     if (!bot.guilds.exists('id', config.SERVER_ID)) {
@@ -246,7 +246,7 @@ function processCommand(message, command, args) {
 
                 message.channel.fetchMessages({limit: limit, before: message.id}).then(function (messages) {
                     messages.forEach(function (message) {
-                        if (args.length < 2 ? false : args[1].toLowerCase() == '-f' && isAdmin.check(message.author)) {
+                        if (args.includes('-f') && isAdmin.check(message.author)) {
                             message.delete();
                         } else if (!message.pinned && message.type == 'DEFAULT') {
                             message.delete();
@@ -254,10 +254,12 @@ function processCommand(message, command, args) {
                     });
                 });
 
-                if (limit == 1) {
-                    respond(message, "Es wurden die letzte Nachricht entfernt.");
-                } else {
-                    respond(message, "Es wurden die letzten " + limit + " Nachrichten entfernt.");
+                if (!args.includes('-s')) {
+                    if (limit == 1) {
+                        respond(message, "Es wurden die letzte Nachricht entfernt.");
+                    } else {
+                        respond(message, "Es wurden die letzten " + limit + " Nachrichten entfernt.");
+                    }
                 }
 
                 message.delete();
