@@ -1,8 +1,13 @@
 #! /bin/bash
 git reset HEAD --hard
 git pull
-forever list | grep discord-bot.js && forever stop discord-bot.js
-forever start discord-bot.js
+
+chmod +x ./start.sh
+
+dir="$(basename $PWD)"
+
+forever list | grep $dir && forever stop $dir
+forever start --uid $dir -a discord-bot.js
 forever list
 
 # start.sh by MLPVC-BOT
