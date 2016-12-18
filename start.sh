@@ -1,4 +1,6 @@
 #! /bin/bash
+cd $(dirname $(readlink -f ${BASH_SOURCE[0]}))
+
 git reset HEAD --hard
 git pull
 
