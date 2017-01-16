@@ -1,3 +1,4 @@
 node_modules
-config.js
+config/config.js
+config/roles.js
 .idea

@@ -7,6 +7,8 @@ module.exports = {
     DEFAULT_CH: '',
     // CHANNEL FOR DEBUG/INFO MESSAGES
     BOT_CH: '',
+    // ID OF ADMIN USER
+    BOT_ADMIN: '',
     // SEND MORE DEBUG MESSAGES
     DEBUG: false
 };
