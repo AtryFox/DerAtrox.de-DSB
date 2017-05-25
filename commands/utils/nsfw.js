@@ -29,7 +29,8 @@ exports.run = (bot, message, args) => {
 };
 
 exports.config = {
-    server: true
+    server: true,
+    enabled: false
 };
 
 exports.help = {
